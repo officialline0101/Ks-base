@@ -213,6 +213,7 @@
         }
 
         .visit-buttons,
+        .processing-buttons,
         .symptoms,
         .menu-sections,
         .irradiations {
@@ -223,6 +224,7 @@
         }
 
         .visit-buttons button,
+        .processing-buttons button,
         .symptoms button,
         .menu-sections button,
         .irradiations button {
@@ -238,6 +240,7 @@
         }
 
         .visit-buttons button.active,
+        .processing-buttons button.active,
         .symptoms button.active,
         .menu-sections button.active,
         .irradiations button.active {
@@ -826,8 +829,12 @@
         <div class="label">お電話番号<span class="required">必須</span></div>
         <input type="tel" id="phone" placeholder="電話番号を入力してください" oninput="saveInput('phone')">
 
-        <div class="label">選んだ加工種類<span class="required">必須</span></div>
-        <input type="text" id="processing" placeholder="選んだ加工種類を入力してください" oninput="saveInput('processing')">
+        <div class="label">選んだ種類<span class="required">必須</span></div>
+        <div class="processing-buttons">
+            <button type="button" id="firstprocessing" onclick="selectprocessing(this)">シルクスクリーン</button>
+            <button type="button" id="repeatprocessing" onclick="selectprocessing(this)">DTFプリント</button>
+            <button type="button" id="sanprocessing" onclick="selectprocessing(this)">刺繍</button>
+        </div>
 
         <div class="label">作成枚数<span class="required">必須</span></div>
         <input type="tel" id="sheets" placeholder="作成枚数を入力してください" oninput="saveInput('sheets')">
@@ -849,6 +856,7 @@
 
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
+        let processingCount = '';
         let visitCount = '';
         let selectedMenu = '';
         let selectedSymptom = [];  // 配列として定義
@@ -862,7 +870,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             liff.init({
-                liffId: '2008127855-8DMjKORD'
+                liffId: '2005254357-zKma9BZk'
             }).then(() => {
                 console.log('LIFF初期化成功');
             }).catch((err) => {
@@ -1237,6 +1245,25 @@ function updateDisplayInfo() {
             updateDisplayInfo(); // 表示を更新
         }
 
+        function selectprocessing(element) {
+            // 選択された日時をリセット
+            selectedFullDate = '';
+
+            document.getElementById('firstprocessing').classList.remove('active');
+            document.getElementById('repeatprocessing').classList.remove('active');
+            document.getElementById('sanprocessing').classList.remove('active');
+            element.classList.add('active');
+            processingCount = element.innerText;
+
+            // 選択された訪問回数に対応する時間を取得
+            selectedprocessingTime = processingTimes[processingCount];
+
+            console.log('選択された訪問回数の時間:', selectedprocessingTime);
+
+            // カレンダーを更新するために取得する日付を渡す
+            fetchAvailability(currentDate);
+        }
+
         function selectVisit(element) {
             // 選択された日時をリセット
             selectedFullDate = '';
@@ -1359,9 +1386,9 @@ function updateDisplayInfo() {
             const formData = {
                 name: document.getElementById('name').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
-                processing: document.getElementById('processing').value.trim(),
                 sheets: document.getElementById('sheets').value.trim(),
                 shirt: document.getElementById('shirt').value.trim(),
+                processingCount: processingCount,
                 visitCount: visitCount
             };
 
