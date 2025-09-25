@@ -1416,7 +1416,7 @@ function updateDisplayInfo() {
             // LINEトークにメッセージを送信
             liff.sendMessages([{
                 type: 'text',
-                text: `【修理依頼】\n《お名前》：${formData.name}\n《電話番号》：${formData.phone}\n\n《選んだ加工種類》：${formData.processing}\n\n《作成枚数》：${formData.sheets}\n\n《デザイン案の有無》：${formData.visitCount}\n\n《シャツの種類》：${formData.shirt}`
+                text: `【修理依頼】\n《お名前》：${formData.name}\n《電話番号》：${formData.phone}\n\n《選んだ加工種類》：${formData.processingCount}\n\n《作成枚数》：${formData.sheets}\n\n《デザイン案の有無》：${formData.visitCount}\n\n《シャツの種類》：${formData.shirt}`
             }]).then(() => {
                 /* メッセージ送信成功時の処理 */
                 alert('当日キャンセルは無いようにお願いいたします。');
